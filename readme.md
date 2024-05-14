@@ -1,26 +1,26 @@
 A description of the scenario my project is operating in:
 - The project name is Airline Ticketing system. 
 - The technical stack :
-# Postman as frontend.
-# Backend Express and Mongodb
+- Postman as frontend.
+- Backend Express and Mongodb
 - It will consist of following features:
-# Authentication : ( as microservice) 
-# authorization: ( admin and user)
-# Admin manages adding airports, ailines, flights.
-# User books flight
-# Managing seats of the flight booking.
+- Authentication : ( as microservice) 
+- authorization: ( admin and user)
+- Admin manages adding airports, ailines, flights.
+- User books flight
+- Managing seats of the flight booking.
 -  The technical components of my project will be, including: the routes, the data models as follows:
-# Models:
-Airports: (_id, name(String) , code((String)), location((String)))
-Airlines: (_id, name(String), code(String))
-Flights : (_id , departureairportid(referencetoairport), arrivalairportId(referencetoairport), departuretime(String), arrivaltime(string),airline_id(refrencetoailine), price(String),seatmap[ String](Bonus feature))
-# The below  values together should be unique and indexed as on the same time one airline cannot be on different locations[ departureairportid(referencetoairport), arrivalairportId(referencetoairport),departuretime(String), arrivaltime(string),airline_id(refrencetoailine)]
-# Bonus feature: Each flight will have a seat map initilized with zero to all seat key- value pairs. Each flight would be booked based on the available seats on that flight. When booked it will change to one.
-# The seat-map logic may change while implementing. 
-passenger: (_id, name(String), email(String),password, phone-number(String)) [When sign up get all the values]
+ Models:
+- Airports: (_id, name(String) , code((String)), location((String)))
+- Airlines: (_id, name(String), code(String))
+- Flights : (_id , departureairportid(referencetoairport), arrivalairportId(referencetoairport), departuretime(String), arrivaltime(string),airline_id(refrencetoailine), price(String),seatmap[ String](Bonus feature))
+- The below  values together should be unique and indexed as on the same time one airline cannot be on different locations[ departureairportid(referencetoairport), arrivalairportId(referencetoairport),departuretime(String), arrivaltime(string),airline_id(refrencetoailine)]
+- Bonus feature: Each flight will have a seat map initilized with zero to all seat key- value pairs. Each flight would be booked based on the available seats on that flight. When booked it will change to one.
+- The seat-map logic may change while implementing. 
+- passenger: (_id, name(String), email(String),password, phone-number(String)) [When sign up get all the values]
 Bookings: (_id, passenger_id, flight_id, status, seat_confirmed)
 
-# Routes
+ Routes
 - Login
   - Signup: `POST /auth/signup`
   - Login: `POST /auth/login`
@@ -58,9 +58,9 @@ Meeting Requirements :
 
 My project is completely my own idea and logic. Not following any already made project. The logic of seat map, ticket retrievals are figured out without implementation so may change while implementing. 
 I will learn:
-# how to architect a model schema for properly handling and retrieving data in an optimized manner.
-# Learn and Build microservices. I think this will make my project little unique. I Will also  present that part of project in supplemental project topics. 
-# Practice aggregations , lookups and text search by implementing those concepts and learning when there is a need to implement aggregations.
+- how to architect a model schema for properly handling and retrieving data in an optimized manner.
+- Learn and Build microservices. I think this will make my project little unique. I Will also  present that part of project in supplemental project topics. 
+- Practice aggregations , lookups and text search by implementing those concepts and learning when there is a need to implement aggregations.
 
 The project task breakdown:
 Week 1 (May 14 - May 21) : Authentication as microservice, Authorization,(5 days) building models, Routes, tests for authentication(2 days).
