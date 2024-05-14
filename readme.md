@@ -1,14 +1,14 @@
 A description of the scenario my project is operating in:
 - The project name is Airline Ticketing system. 
 - The technical stack :
-- Postman as frontend.
-- Backend Express and Mongodb
+    Postman as frontend.
+    Backend Express and Mongodb
 - It will consist of following features:
-- Authentication : ( as microservice) 
-- authorization: ( admin and user)
-- Admin manages adding airports, ailines, flights.
-- User books flight
-- Managing seats of the flight booking.
+    Authentication : ( as microservice) 
+    authorization: ( admin and user)
+    Admin manages adding airports, ailines, flights.
+    User books flight
+    Managing seats of the flight booking.
 -  The technical components of my project will be, including: the routes, the data models as follows:
  Models:
 - Airports: (_id, name(String) , code((String)), location((String)))
@@ -66,3 +66,5 @@ The project task breakdown:
 Week 1 (May 14 - May 21) : Authentication as microservice, Authorization,(5 days) building models, Routes, tests for authentication(2 days).
 Week 2(May 21 - may 28): Daos functions for the routes, CRUD operations, aggregation , text search and lookup(user retrieving a ticket route, searching a flight )
 Week 3 (May 28 - june 4) Build  detailed unit tests for all routes (airline, airport,flight, booking)
+
+A description of what problem my project seeks to solve: It help the user to search and book airline tickets.
