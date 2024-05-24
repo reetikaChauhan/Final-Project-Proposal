@@ -1,0 +1,37 @@
+{
+  "name": "authenticationservice",
+  "version": "1.0.0",
+  "description": "authentication to called by airline ticketing",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --runInBand",
+    "ci": "jest --json --runInBand | node .github/workflows/parseOutput.js",
+    "tdd": "jest --watch --runInBand",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "preset": "@shelf/jest-mongodb",
+    "watchPathIgnorePatterns": [
+      "globalConfig"
+    ]
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.4.0"
+  },
+  "devDependencies": {
+    "@shelf/jest-mongodb": "^4.1.7",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
+}
