@@ -1,3 +1,23 @@
+Proof of Concept
+Completed features:
+- Project setup, with mongoose connection and running express server.
+- Authorization of the 2 roles -( normal user and admin)
+- Authentication of user.
+- Implemented models, routes and DAO functions.
+- Implemented text search using city name for searching airport.
+- Implemented aggregation to search flight using arrival city and departure city.
+- Implemented aggregation to get ticket of the user with booking id.
+
+Tasks Pending:
+- Routes should be fully tested (project test coverage > 80%)
+
+Project requirements covered:
+- 4 set  of CRUD operations. 2 complete with create, read and update.
+- Indexes for performance and uniqueness when reasonable
+- At least one of text search, aggregations, and lookups.
+- I will demo my project to the class using postman.
+
+
 A description of the scenario my project is operating in:
 - The project name is Airline Ticketing system. 
 - The technical stack :
@@ -13,9 +33,9 @@ A description of the scenario my project is operating in:
  Models:
 - Airports: (_id, name(String) , code((String)), location((String)))
 - Airlines: (_id, name(String), code(String))
-- Flights : (_id , departureairportid(referencetoairport), arrivalairportId(referencetoairport), departuretime(String), arrivaltime(string),airline_id(refrencetoailine), price(String),seatmap[ String](Bonus feature))
+- Flights : (_id , departureairportid(referencetoairport), arrivalairportId(referencetoairport), departuretime(String), arrivaltime(string),airline_id(refrencetoailine), price(String),seatmap[ String])
 - The below  values together should be unique and indexed as on the same time one airline cannot be on different locations[ departureairportid(referencetoairport), arrivalairportId(referencetoairport),departuretime(String), arrivaltime(string),airline_id(refrencetoailine)]
-- Bonus feature: Each flight will have a seat map initilized with zero to all seat key- value pairs. Each flight would be booked based on the available seats on that flight. When booked it will change to one.
+-  Each flight will have a seat map initilized with False to all seat key- value pairs. Each flight would be booked based on the available seats on that flight. When booked it will change to one.
 - The seat-map logic may change while implementing. 
 - passenger: (_id, name(String), email(String),password, phone-number(String)) [When sign up get all the values]
 Bookings: (_id, passenger_id, flight_id, status, seat_confirmed)
@@ -59,7 +79,7 @@ Meeting Requirements :
 My project is completely my own idea and logic. Not following any already made project. The logic of seat map, ticket retrievals are figured out without implementation so may change while implementing. 
 I will learn:
 - how to architect a model schema for properly handling and retrieving data in an optimized manner.
-- Learn and Build microservices. I think this will make my project little unique. I Will also  present that part of project in supplemental project topics. 
+- Learn and Build microservices. I think this will make my project little unique.(Bonus) I Will also  present it in supplemental project topics. 
 - Practice aggregations , lookups and text search by implementing those concepts and learning when there is a need to implement aggregations.
 
 The project task breakdown:
@@ -68,3 +88,5 @@ Week 2(May 21 - may 28): Daos functions for the routes, CRUD operations, aggrega
 Week 3 (May 28 - june 4) Build  detailed unit tests for all routes (airline, airport,flight, booking)
 
 A description of what problem my project seeks to solve: It help the user to search and book airline tickets.
+
+
