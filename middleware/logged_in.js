@@ -3,6 +3,7 @@ const tokenDAO = require('../daos/token');
 const isLoggedIn = async (req, res, next) => {
   // Extract token from authorization header
   const token = req.headers.authorization?.split(' ')[1];
+  console.log("token in isloggedin", token)
   // Check if token is missing or invalid
   if (!token || token === "BAD") {
     return res.status(401).send('Unauthorized: No token provided');
@@ -23,6 +24,7 @@ const isLoggedIn = async (req, res, next) => {
     // Call next middleware or route handler
     next();
   } catch (error) {
+    console.log("error in isloggedin",error)
     if (error.message === 'Invalid token' || error.message === 'Token not found') {
         return res.status(401).send('Unauthorized: Invalid token');
       }

@@ -10,11 +10,13 @@ router.use("/bookings", require('./booking'));
 router.use("/passengers", require('./passengers'));
 
 router.use((err,req,res,next) => {
-    console.log("user in ticket",req.params)
+    console.log("user in ticket",req.params.id)
     if(err.message.includes("Cast to ObjectId failed")){
-        res.status(400).send("Invalid id provided")
+        console.log("error in middlware", err)
+        console.log("hello tatti why are you not returning for get id")
+        return res.status(400).send("Invalid id provided")
     } else{
-        console.error(err)
+        console.log(err)
         res.status(500).send("Something broke!")
     }
 });

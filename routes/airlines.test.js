@@ -141,42 +141,59 @@ describe("/airlines", () => {
         const savedAirline = await Airlines.findOne({ _id: res.body._id }).lean();
         expect(savedAirline).toMatchObject(airline);
       });
+      it("should reject an airline with an empty body", async () => {
+            const airline = {};
+            const res = await request(server).post("/airlines")
+            .set("Authorization", "Bearer " + adminToken)
+            .send(airline);
+            expect(res.statusCode).toEqual(400);
+      });
+      it("should reject an airline without a name", async () => {
+            const airline = {
+              code: "QXE"
+          } ;
+            const res = await request(server).post("/airlines")
+            .set("Authorization", "Bearer " + adminToken)
+            .send(airline);
+            expect(res.statusCode).toEqual(400);
+          });
+         
     });
-  // describe("PUT / item %#", () => {
-  // let orgairline;
-  // beforeEach(async () => {
-  //     const res = await request(server)
-  //     .post("/airlines")
-  //     .set("Authorization", "Bearer " + adminToken)
-  //     .send(airline);
-  //     orgairline = res.body;
-  // });
-  // console.log("in tests put airline",orgairline)
-  // console.log("in tests put token",token0)
-  // it("should send 403 to normal user and not update item", async () => {
-  //     const res = await request(server)
-  //     .put("/airlines/" + orgairline._id)
-  //     .set("Authorization", "Bearer " + token0)
-  //     .send({ ...airline, code: 'ANN' });
-  //     expect(res.statusCode).toEqual(403);
-  //     const newItem = await Airlines.findById(orgairline._id).lean();
-  //     newItem._id = newItem._id.toString();
-  //     expect(newItem).toMatchObject(orgairline);
-  // });
-  // it("should send 200 to admin user and update item", async () => {
-  //     const res = await request(server)
-  //     .put("/airlines/" + orgairline._id)
-  //     .set("Authorization", "Bearer " + adminToken)
-  //     .send({ ...airline, code: 'ANN' });
-  //     expect(res.statusCode).toEqual(200);
-  //     const newItem = await Airlines.findById(originalItem._id).lean();
-  //     newItem._id = newItem._id.toString();
-  //     expect(newItem).toMatchObject({
-  //     ...orgairline,
-  //     code:'ANN',
-  //     });
-  // });
-  // });
+  describe("PUT / airline %#", () => {
+  let orgairline;
+  beforeEach(async () => {
+      const res = await request(server)
+      .post("/airlines")
+      .set("Authorization", "Bearer " + adminToken)
+      .send(airline);
+      console.log("airline post response", res.body)
+      orgairline = res.body;
+  });
+ 
+  it("should send 403 to normal user and not update item", async () => {
+      const res = await request(server)
+      .put("/airlines/" + orgairline._id)
+      .set("Authorization", "Bearer " + token0)
+      .send({ ...airline, code: 'ANN' });
+      expect(res.statusCode).toEqual(403);
+      const newItem = await Airlines.findById(orgairline._id).lean();
+      newItem._id = newItem._id.toString();
+      expect(newItem).toMatchObject(orgairline);
+  });
+  it("should send 200 to admin user and update item", async () => {
+      const res = await request(server)
+      .put("/airlines/" + orgairline._id)
+      .set("Authorization", "Bearer " + adminToken)
+      .send({ ...airline, code: 'ANN' });
+      expect(res.statusCode).toEqual(200);
+      const newItem = await Airlines.findById(orgairline._id).lean();
+      newItem._id = newItem._id.toString();
+      expect(newItem).toMatchObject({
+      ...orgairline,
+      code:'ANN',
+      });
+  });
+  });
     
   })
     

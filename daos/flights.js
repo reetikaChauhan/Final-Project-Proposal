@@ -10,7 +10,10 @@ module.exports.getFlights = async() => {
 
 
 module.exports.getFlightsById = async (flightId) => {
-    const flight =  await Flights.find({ _id: flightId }).lean();
+    if (!mongoose.Types.ObjectId.isValid(flightId)) {
+        return false;
+      }
+    const flight =  await Flights.findOne({ _id: flightId }).lean();
     return flight
 }
 

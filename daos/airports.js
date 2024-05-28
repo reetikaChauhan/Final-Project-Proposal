@@ -1,5 +1,5 @@
 const Airport = require('../models/airports');
-
+const mongoose = require('mongoose');
 
 module.exports = {};
 
@@ -12,7 +12,10 @@ module.exports.getAirport = async() => {
 
 
 module.exports.getAirportById = async (airportId) => {
-    const airport =  await Airport.find({_id:airportId}).lean();
+  if (!mongoose.Types.ObjectId.isValid(airportId)) {
+    return null;
+  }
+    const airport =  await Airport.findOne({_id:airportId}).lean();
     return airport
 }
 module.exports.getAirportByCity = async (location) => {
@@ -21,7 +24,7 @@ module.exports.getAirportByCity = async (location) => {
     { score: { $meta: "textScore" } }
     ).sort({ score: { $meta: "textScore" } })  
 }
-module.exports.createAirportrec = async(aid,airportrec) => {
+module.exports.updateAirport = async(aid,airportrec) => {
   if (!mongoose.Types.ObjectId.isValid(aid)) {
     return false;
   }

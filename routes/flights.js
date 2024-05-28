@@ -59,18 +59,12 @@ router.get("/",async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
     const flightid = req.params.id
-    try {
-        const flightresult = await  FlightDAO.getFlightsById(flightid);
-        return res.status(200).json(flightresult);
-    } catch(error) {
-        if (error instanceof FlightDAO.BadDataError) {
-            // Handle specific error types
-            return res.status(409).send(error.message); // 409 for duplicate key error
-        } else {
-            // Handle other errors
-            next(error);
-        }
-    }
+    const flightresult = await  FlightDAO.getFlightsById(flightid);
+    if (flightresult) {
+        res.json(flightresult);
+      } else {
+        res.sendStatus(404);
+      }
 });
 
 

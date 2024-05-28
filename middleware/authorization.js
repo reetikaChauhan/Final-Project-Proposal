@@ -7,6 +7,7 @@ const isAdmin = async (req, res, next) => {
             res.sendStatus(403); // Send Forbidden status if user is not an admin
         }
     } catch (error) {
+        console.log("in authorization error", error)
         res.status(500).send({ error: 'Internal Server Error' });
     }
 };
