@@ -4,7 +4,7 @@
   "description": "authentication to called by airline ticketing",
   "main": "index.js",
   "scripts": {
-    "test": "jest --runInBand",
+    "test": "jest --runInBand --coverage --coverageDirectory='coverage'",
     "ci": "jest --json --runInBand | node .github/workflows/parseOutput.js",
     "tdd": "jest --watch --runInBand",
     "start": "node index.js"

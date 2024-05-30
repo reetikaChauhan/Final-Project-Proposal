@@ -198,28 +198,3 @@ describe("/airlines", () => {
   })
     
 });
-
-
-//   it("should reject an airline with an empty body", async () => {
-    //     const airline = {};
-    //     const res = await request(server).post("/airlines").send(airline);
-    //     expect(res.statusCode).toEqual(400);
-    //   });
-    //   it("should reject an airline without a name", async () => {
-    //     const airline = {
-    //       code: "QXE"
-    //   } ;
-    //     const res = await request(server).post("/airlines").send(airline);
-    //     expect(res.statusCode).toEqual(400);
-    //   });
-    //   it("should create an author", async () => {
-    //     const airline = {
-    //       name: 'Lynx Airline',
-    //       code:'LXO'
-    //     };
-    //     const res = await request(server).post("/airlines").send(airline);
-    //     expect(res.statusCode).toEqual(200);
-    //     const { _id } = res.body;
-    //     const savedAirline = await Airlines.findOne({ _id }).lean();
-    //     expect(savedAirline).toMatchObject(airline);
-    //   });

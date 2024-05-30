@@ -7,7 +7,7 @@ router.use("/airports", require('./airports'));
 router.use("/airlines", require('./airlines'));
 router.use("/flights", require('./flights'));
 router.use("/bookings", require('./booking'));
-router.use("/passengers", require('./passengers'));
+
 
 router.use((err,req,res,next) => {
     console.log("user in ticket",req.params.id)

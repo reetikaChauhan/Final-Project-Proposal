@@ -25,7 +25,9 @@ module.exports.getBookings = async(user) => {
 module.exports.getBookingswithid = async(user,id) => {
     let allbookings
     if(user){
+        console.log("hey there i am running ")
          allbookings = await Booking.findOne({passenger_id:user,_id:id }).lean(); 
+         console.log("running get bookings by id with non -admin",allbookings )
     }
     else{
          allbookings = await Booking.findOne({ _id:id}).lean(); 
@@ -57,7 +59,9 @@ module.exports.isavailable = async(fid) => {
 }
 
 module.exports.getTicketofUser = async (userID, bookingId) => {
-    console.log("user in ticket", userID, bookingId);
+    if (!mongoose.Types.ObjectId.isValid(bookingId)) {
+        return null;
+    }
     const user_Id = new mongoose.Types.ObjectId(userID);
     const booking_Id = new mongoose.Types.ObjectId(bookingId);
     try{
@@ -148,8 +152,9 @@ module.exports.getTicketofUser = async (userID, bookingId) => {
         }
         
     ]);
-    console.log("Match result:", result);
+    console.log("result in booking ticket", result)
     return result;
+    
 }
     catch (error) {
          console.error('Error performing aggregation:', error);

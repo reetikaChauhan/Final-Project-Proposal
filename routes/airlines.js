@@ -23,7 +23,6 @@ router.post("/",isLoggedIn,isAdmin, async (req, res, next) => {
                 // Handle other errors
                 next(error);
             }
-            next(error);
         }
     }
 });
@@ -36,11 +35,9 @@ router.get("/", async (req, res, next) => {
     } catch(e) {
         next(e)
     }
-
 });
  
 //get by Id
-
 router.get("/:id", async (req, res, next) => {
     const airlineid = req.params.id
     try {
@@ -51,9 +48,7 @@ router.get("/:id", async (req, res, next) => {
         }else{
             
              res.status(404).send("No Matching Id")
-        }
-        
-        
+        }   
     } catch(error) {
         if (error instanceof AirlineDAO.BadDataError) {
             // Handle specific error types

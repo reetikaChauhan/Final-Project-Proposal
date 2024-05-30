@@ -1,5 +1,4 @@
 const isAdmin = async (req, res, next) => {
-    console.log("in authorization", req.user)
     try {
         if (req.user.roles.includes('admin')) {
             next(); // Call next() to pass control to the next middleware or route handler

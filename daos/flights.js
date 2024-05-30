@@ -22,7 +22,6 @@ module.exports.getFlightsByAirportName = async(departureAirportIds,arrivalAirpor
   try {
    
     if (!departureAirportIds || !arrivalAirportIds) {
-        console.log('One or both of the cities do not have corresponding airport IDs.');
         return;
     }
 
@@ -69,7 +68,6 @@ module.exports.getFlightsByAirportName = async(departureAirportIds,arrivalAirpor
             },
         },
     ]);
-    console.log(result);
     return result
   } catch (error) {
       console.error('Error performing aggregation:', error);
@@ -90,8 +88,6 @@ module.exports.updateseatbooked = async(flight_Id, seat_num) => {
     if (!updatedFlight) {
         throw new Error('Flight or seat not found');
     }
-
-    console.log('Updated flight:', updatedFlight);
     return updatedFlight;
 } catch (err) {
     console.error('Error updating seat status:', err);

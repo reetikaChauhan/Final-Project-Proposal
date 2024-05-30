@@ -49,14 +49,8 @@ router.get("/", async (req, res, next) => {
             next(e)
         }
     }
-    
-
 });
-
-
-
 //get by Id
-
 router.get("/:id", async (req, res, next) => {
     const airportid = req.params.id
     console.log('airport in get by id', airportid)
@@ -77,7 +71,6 @@ router.put("/:id",isLoggedIn,isAdmin, async (req, res, next) => {
     } catch(e) {
         next(e)
     }
-
 });
 
   module.exports = router;

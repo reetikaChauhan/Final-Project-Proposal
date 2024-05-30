@@ -1,39 +1,97 @@
 const request = require("supertest");
 
 const server = require("../server");
-const testUtils = require('../test-utils');
-const Flights = require('../models/flights');
-const Book = require('../models/booking');
+const testUtils = require("../test-utils");
+
+const User = require("../models/user");
+const Booking = require("../models/booking");
+const Flights = require("../models/flights");
+const Airports = require('../models/airports');
 const Airlines = require('../models/airlines');
-const User = require('../models/user');
 
-
-describe("/flights", () => {
+describe("/booking", () => {
   beforeAll(testUtils.connectDB);
   afterAll(testUtils.stopDB);
-  
-  let savedBook;
- 
-  const testBook = 
+
+  afterEach(testUtils.clearDB);
+
+let savedflights;
+  let savedAirport;
+  let savedAirline;
+  const testflights = 
    [
         {
-            status: "Confirmed",
-            seat: "1A"
+            departure_time: "06:00",
+            departure_date: "06-07-2024",
+            arrival_date: "06-07-2024",
+            arrival_time: "08:40",
+            seat_map: [
+              { seat_num: "1A", booked: true },
+              { seat_num: "2A", booked: true },
+              { seat_num: "3A", booked: false },
+              { seat_num: "4A", booked: false },
+              { seat_num: "5A", booked: false }
+            ]
         },
         {
-            status: "Confirmed",
-            seat: "2A"
+            departure_time: "10:00",
+            departure_date: "06-07-2024",
+            arrival_date: "06-07-2024",
+            arrival_time: "13:40",
+            seat_map: [
+              { seat_num: "1A", booked: true },
+              { seat_num: "2A", booked: true },
+              { seat_num: "3A", booked: false },
+              { seat_num: "4A", booked: false },
+              { seat_num: "5A", booked: false }
+            ]
         }
-
-    
 ]
-
+const testAirport = [
+    {
+        name: "seatec",
+        code: "4530",
+        location: "seatec WA",
+    },
+    {
+        name: "San Francisco  International Airport",
+        code: "4535",
+        location: "San Francisco CA",
+    },
+]
+const testAirline = [
+    {
+        name: "Horizon Air",
+        code: "QXE",
+    }   
+];
+const flight = [
+    {
+        departure_time: "06:00",
+        departure_date: "06-07-2024",
+        arrival_date: "06-07-2024",
+        arrival_time: "08:40",
+        seat_map: [
+          { seat_num: "1A", booked: true },
+          { seat_num: "2A", booked: true },
+          { seat_num: "3A", booked: false },
+          { seat_num: "4A", booked: false },
+          { seat_num: "5A", booked: false }
+        ]
+    },
+]
   
   beforeEach(async () => {
     console.log("hellooooooooooo")
-    savedBook = await testBook.insertMany(testBook);
-    console.log("savedAirport tatssssss", savedBook)
-   
+    savedAirport = await Airports.insertMany(testAirport);
+    console.log("savedAirport tatssssss", savedAirport)
+    testAirport.forEach((airport, index) => {
+        airport._id = savedAirport[index]._id.toString();
+      });
+    savedAirline = await Airlines.insertMany(testAirline);
+    testAirline.forEach((airline, index) => {
+        airline._id = savedAirline[index]._id.toString();
+    });
    
     console.log("testAirport", testAirport)
     console.log("testAirline", testAirline)
@@ -48,82 +106,72 @@ describe("/flights", () => {
     testflights.forEach((flight, index) => {
         flight._id = savedflights[index]._id.toString();
         flight.seat_map.forEach((seat,index_seat) =>{
-          console.log("seattt in test flight", seat)
           seat._id = savedflights[index].seat_map[index_seat]._id.toString();
-          console.log("seattt in test flight after adding", seat)
         })
     });
     console.log("in before each", testflights)
     console.log("saved flightttttttt", savedflights)
   });
-  afterEach(testUtils.clearDB);
-
-  describe("GET /", () => {
-    console.log("testflights", testflights)
-    it("should return all flights", async () => {
-      const res = await request(server).get("/flights");
-      console.log("get all flightsaaaaa", res.body)
-      expect(res.statusCode).toEqual(200);
-      testflights.forEach(testfl => {
-        expect(res.body).toContainEqual(
-          expect.objectContaining(testfl)
-        )
-      })
-    });
-  })
-  describe("GET /:id", () => {
-    it("should return 404 if no matching id", async () => {
-      const res = await request(server).get("/flights/id1");
-      expect(res.statusCode).toEqual(404);
-    });
-
-    it.each(testflights)("should find flight # %#", async (flight) => {
-      const res = await request(server).get("/flights/" + flight._id);
-      expect(res.statusCode).toEqual(200);
-      expect(res.body).toMatchObject(flight);
-    })
-  });
-  describe("GET /search ?arrivalcity && departurecity", () => {
-    const searchterm1 = "seatec";
-    const searchterm2 = "san francisco";
-    it("should return one flight matching the search query", async () => {
-      const res = await request(server).get("/flights/?arrival_city=" + encodeURI(searchterm1)+ "&departure_city=" + encodeURI(searchterm2));
-      expect(res.statusCode).toEqual(200);
-      console.log("res.body in gett by cityyyyyyyarrr", res.body)
-      expect(res.body).toMatchObject(testflights);
- });
-  });
+  const booking = {
+    flight_id: testflights[0]._id,
+    status: "confirmed"
+  }
   describe("Before login", () => {
     describe("POST /", () => {
       it("should send 401 without a token", async () => {
-        const res = await request(server).post("/flights").send(flight);
+        const res = await request(server).post("/bookings").send(booking);
         expect(res.statusCode).toEqual(401);
       });
       it("should send 401 with a bad token", async () => {
         const res = await request(server)
-          .post("/flights")
+          .post("/bookings")
           .set("Authorization", "Bearer BAD")
-          .send(flight);
+          .send(booking);
         expect(res.statusCode).toEqual(401);
       });
-    
+    });
+    describe("GET /", () => {
+      it("should send 401 without a token", async () => {
+        const res = await request(server).get("/bookings").send(booking);
+        expect(res.statusCode).toEqual(401);
+      });
+      it("should send 401 with a bad token", async () => {
+        const res = await request(server)
+          .get("/bookings")
+          .set("Authorization", "Bearer BAD")
+          .send();
+        expect(res.statusCode).toEqual(401);
+      });
+    });
+    describe("GET /:id", () => {
+      it("should send 401 without a token", async () => {
+        const res = await request(server).get("/bookings/123").send();
+        expect(res.statusCode).toEqual(401);
+      });
+      it("should send 401 with a bad token", async () => {
+        const res = await request(server)
+          .get("/bookings/456")
+          .set("Authorization", "Bearer BAD")
+          .send();
+        expect(res.statusCode).toEqual(401);
+      });
     });
   });
-  describe("After login", () => {
+  describe("after login", () => {
     const user0 = {
-      email: "user0@mail.com",
-      password: "123password",
-      roles:"user",
-      name:"user",
-      phone:"12346"
-    };
-    const user1 = {
-      email: "user1@mail.com",
-      password: "456password",
-      roles:"user",
-      name:"user",
-      phone:"12346"
-    };
+        email: "user0@mail.com",
+        password: "123password",
+        roles:"user",
+        name:"user",
+        phone:"12346"
+      };
+      const user1 = {
+        email: "user1@mail.com",
+        password: "456password",
+        roles:"user",
+        name:"user",
+        phone:"12346"
+      };
     let token0;
     let adminToken;
     beforeEach(async () => {
@@ -133,54 +181,237 @@ describe("/flights", () => {
       await request(server).post("/auth/signup").send(user1);
       await User.updateOne(
         { email: user1.email },
-        { $push: { roles: "admin" } }
+        { $push: { roles: "admin" } },
       );
       const res1 = await request(server).post("/auth/login").send(user1);
       adminToken = res1.body.token;
     });
-    
-        
-  describe("POST / flight %#", () => {
-      it("should send 403 to normal user and not store flight", async () => {
-        console.log("flights....",flight)
+    describe("POST /", () => {
+        console.log("hello ji in psot", testflights)
+      it("should send 200 to normal user and create booking", async () => {
+        console.log("testflight in post booking", testflights)
+        const booking = {
+            flight_id: testflights[0]._id,
+            status: "confirmed"
+          }
         const res = await request(server)
-          .post("/flights")
+          .post("/bookings")
           .set("Authorization", "Bearer " + token0)
-          .send(flight);
-        expect(res.statusCode).toEqual(403);
-        //expect(await Airlines.countDocuments()).toEqual(0);
-      }); 
-      it("should reject an airport with an empty body", async () => {
-        const flight = {};
-        const res = await request(server).post("/flights")
-        .set("Authorization", "Bearer " + adminToken)
-        .send(flight);
-        expect(res.statusCode).toEqual(400);
-      });
-      
-      it("should send 200 to admin user and store airport", async () => {
-        const upflight = {...flight[0], 
-          departure_airport_id: testAirport[0]._id,
-          arrival_airport_id : testAirport[1]._id,
-          airline_id:testAirline[0]._id
-        }
-       console.log("upflighttttttt",upflight)
-        const res = await request(server)
-          .post("/flights")
-          .set("Authorization", "Bearer " + adminToken)
-          .send(upflight);
+          .send(booking);
+        console.log("hello there in post after login booking",res.body)
         expect(res.statusCode).toEqual(200);
-        expect(res.body).toMatchObject(upflight);
-        console.log("res.body in post plsssss", res.body)
-        const savedflight = await Flights.findOne({ _id: res.body._id }).lean();
-        console.log("saved flight in posttttt", savedflight)
-        console.log("flight to mtched in post", upflight)
-        expect(savedflight.departure_time).toEqual(res.body.departure_time);
+        const storedBooking = await Booking.findOne().lean();
+        console.log("stored boooking in post:",storedBooking)
+        const expectedBooking = {
+            flight_id: testflights[0]._id.toString(),
+            passenger_id: (await User.findOne({ email: user0.email }).lean())._id.toString(),
+            seat: "3A"
+          };
+      
+          // Convert stored booking IDs to strings for comparison
+          storedBooking.flight_id = storedBooking.flight_id.toString();
+          storedBooking.passenger_id = storedBooking.passenger_id.toString();
+          expect(storedBooking).toMatchObject(expectedBooking);
+      });
+      it("should send 400 with a bad flight _id", async () => {
+        const booking0 = {
+            flight_id: "5f1b8d9ca0ef055e6e5a1f6b",
+            status: "confirmed"
+          }
+        const res = await request(server)
+          .post("/bookings")
+          .set("Authorization", "Bearer " + adminToken)
+          .send(booking0);
+        expect(res.statusCode).toEqual(400);
+        const storedOrder = await Booking.findOne().lean();
+        expect(storedOrder).toBeNull();
       });
     });
- 
-  })
-    
+   
+    describe("GET /:id", () => {
+        let Booking0Id, Booking1Id;
+        
+    beforeEach(async () => {
+        console.log("savedflightssssssss in get by id", savedflights)
+        const booking1 = {
+            flight_id: savedflights[0]._id,
+            status: "confirmed"
+            }
+            const booking2 = {
+            flight_id: savedflights[1]._id,
+            status: "confirmed"
+            }
+        console.log("token in get by id", token0)
+            const res0 = await request(server)
+            .post("/bookings")
+            .set("Authorization", "Bearer " + token0)
+            .send(booking1);
+            Booking0Id = res0.body._id;
+            console.log("res body for posting booking for getting id", res0.body)
+            const res1 = await request(server)
+            .post("/bookings")
+            .set("Authorization", "Bearer " + adminToken)
+            .send( booking2);
+            Booking1Id = res1.body._id;
+        });
+        it("should send 200 to normal user with their booking ", async () => {
+            console.log("in get by id bookingiddddd", Booking0Id)
+            const res = await request(server)
+            .get("/bookings/" + Booking0Id)
+            .set("Authorization", "Bearer " + token0)
+            .send();
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toMatchObject({
+            flight_id: savedflights[0]._id.toString(),
+            passenger_id: (await User.findOne({ email: user0.email }))._id.toString(),
+            seat:"3A"
+            });
+        });
+        it("should send 404 to normal user with someone else's booking", async () => {
+            const res = await request(server)
+            .get("/bookings/" + Booking1Id)
+            .set("Authorization", "Bearer " + token0)
+            .send();
+            expect(res.statusCode).toEqual(404);
+        });
+        it("should send 200 to admin user with their booking", async () => {
+            const res = await request(server)
+            .get("/bookings/" + Booking1Id)
+            .set("Authorization", "Bearer " + adminToken)
+            .send();
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toMatchObject({
+            flight_id: savedflights[1]._id.toString(),
+            passenger_id: (await User.findOne({ email: user1.email }))._id.toString(),
+            seat:"3A"
+            });
+        });
+        it("should send 200 to admin user with someone else's booking", async () => {
+            const res = await request(server)
+            .get("/bookings/" + Booking0Id)
+            .set("Authorization", "Bearer " + adminToken)
+            .send();
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toMatchObject({
+            flight_id: savedflights[0]._id.toString(),
+            passenger_id: (await User.findOne({ email: user0.email }))._id.toString(),
+            seat:"3A"
+            });
+        });
+      });
+    describe("GET /", () => {
+        let Booking0Id, Booking1Id;
+        
+    beforeEach(async () => {
+        console.log("savedflightssssssss in get by id", savedflights)
+        const booking1 = {
+            flight_id: savedflights[0]._id,
+            status: "confirmed"
+        }
+        const booking2 = {
+            flight_id: savedflights[1]._id,
+            status: "confirmed"
+        }
+        console.log("token in get by id", token0)
+            const res0 = await request(server)
+            .post("/bookings")
+            .set("Authorization", "Bearer " + token0)
+            .send(booking1);
+            Booking0Id = res0.body._id;
+            console.log("res body for posting booking for getting id", res0.body)
+            const res1 = await request(server)
+            .post("/bookings")
+            .set("Authorization", "Bearer " + adminToken)
+            .send( booking2);
+            Booking1Id = res1.body._id;
+        });
+        it("should send 200 to normal user with their booking", async () => {
+            const res = await request(server)
+              .get("/bookings")
+              .set("Authorization", "Bearer " + token0)
+              .send();
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toMatchObject([
+              {
+                flight_id: savedflights[0]._id.toString(),
+                passenger_id: (await User.findOne({ email: user0.email }))._id.toString(),
+                seat:"3A"
+              },
+            ]);
+          });
+          it("should send 200 to admin user all orders", async () => {
+            const res = await request(server)
+              .get("/bookings")
+              .set("Authorization", "Bearer " + adminToken)
+              .send();
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toMatchObject([
+              {
+                flight_id: savedflights[0]._id.toString(),
+                passenger_id: (await User.findOne({ email: user0.email }))._id.toString(),
+                seat:"3A"
+              },
+              {
+                flight_id: savedflights[1]._id.toString(),
+                passenger_id: (await User.findOne({ email: user1.email }))._id.toString(),
+                seat:"3A"
+              },
+            ]);
+          });
+      })
+    describe("GET /ticket/:id", () => {
+        let Booking0Id, Booking1Id;
+        beforeEach(async () => {
+            console.log("savedflightssssssss in get by id", savedflights)
+            const booking1 = {
+                flight_id: savedflights[0]._id,
+                status: "confirmed"
+            }
+            const booking2 = {
+                flight_id: savedflights[1]._id,
+                status: "confirmed"
+            }
+            console.log("token in get by id", token0)
+                const res0 = await request(server)
+                .post("/bookings")
+                .set("Authorization", "Bearer " + token0)
+                .send(booking1);
+                Booking0Id = res0.body._id;
+                console.log("res body for posting booking for getting id", res0.body)
+                const res1 = await request(server)
+                .post("/bookings")
+                .set("Authorization", "Bearer " + adminToken)
+                .send( booking2);
+                Booking1Id = res1.body._id;
+            })
+            it("should send 400 for not a valid booking id", async () => {
+                const res = await request(server)
+                  .get("/bookings/ticket/id1")
+                  .set("Authorization", "Bearer " + adminToken)
+                  .send();
+                expect(res.statusCode).toEqual(400);
+            });
+            it("should send 404 for not a valid booking id", async () => {
+                const res = await request(server)
+                  .get("/bookings/ticket/"+ Booking1Id)
+                  .set("Authorization", "Bearer " + token0)
+                  .send();
+                expect(res.statusCode).toEqual(404);
+            });
+            it("should send 200 for not a valid booking id", async () => {
+                const res = await request(server)
+                  .get("/bookings/ticket/"+ Booking0Id)
+                  .set("Authorization", "Bearer " + token0)
+                  .send();
+                expect(res.statusCode).toEqual(200);
+                expect(res.body).toMatchObject([
+                    {
+                      passenger_name: (await User.findOne({ email: user0.email })).name,
+                      Phone:(await User.findOne({ email: user0.email })).phone
+                    }
+                  
+                  ]);
+            });   
+    })
+    })     
 });
-
-

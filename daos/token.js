@@ -6,7 +6,6 @@ module.exports = {};
 module.exports.makeTokenForUserId = async(userId) => {
     try{
         const userrecord =  await User.findOne({_id : userId}).lean()
-        console.log("in daoos token", userrecord)
         const secretKey = "e87a47b5a9a10e605ae5463e6c1320fb7bfbb4198c41db00a78a68b3c92a01d1"
         const payload = {
             _id : userId,
