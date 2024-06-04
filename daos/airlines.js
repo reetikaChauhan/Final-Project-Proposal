@@ -20,14 +20,11 @@ module.exports.getAirlinesById = async (airlineId) => {
 }
 
 module.exports.updateAirlines = async(aid,airlinerec) => {
-  console.log("helloooooo")
   try{
   if (!mongoose.Types.ObjectId.isValid(aid)) {
-    console.log("helloooooo")
     return false;
   }
   const airlineobj =  await Airlines.updateOne({_id:aid},airlinerec);
-  console.log("airlineobjupdate", airlineobj  )
   return airlineobj
 } catch(error){
     console.log("error in update daos", error)

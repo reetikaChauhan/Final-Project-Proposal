@@ -82,9 +82,7 @@ const flight = [
 ]
   
   beforeEach(async () => {
-    console.log("hellooooooooooo")
     savedAirport = await Airports.insertMany(testAirport);
-    console.log("savedAirport tatssssss", savedAirport)
     testAirport.forEach((airport, index) => {
         airport._id = savedAirport[index]._id.toString();
       });
@@ -92,9 +90,6 @@ const flight = [
     testAirline.forEach((airline, index) => {
         airline._id = savedAirline[index]._id.toString();
     });
-   
-    console.log("testAirport", testAirport)
-    console.log("testAirline", testAirline)
     testflights[0].departure_airport_id = testAirport[0]._id;
     testflights[0].arrival_airport_id = testAirport[1]._id;
     testflights[1].departure_airport_id = testAirport[0]._id;
@@ -109,8 +104,6 @@ const flight = [
           seat._id = savedflights[index].seat_map[index_seat]._id.toString();
         })
     });
-    console.log("in before each", testflights)
-    console.log("saved flightttttttt", savedflights)
   });
   const booking = {
     flight_id: testflights[0]._id,
@@ -187,9 +180,7 @@ const flight = [
       adminToken = res1.body.token;
     });
     describe("POST /", () => {
-        console.log("hello ji in psot", testflights)
       it("should send 200 to normal user and create booking", async () => {
-        console.log("testflight in post booking", testflights)
         const booking = {
             flight_id: testflights[0]._id,
             status: "confirmed"
@@ -198,10 +189,8 @@ const flight = [
           .post("/bookings")
           .set("Authorization", "Bearer " + token0)
           .send(booking);
-        console.log("hello there in post after login booking",res.body)
         expect(res.statusCode).toEqual(200);
         const storedBooking = await Booking.findOne().lean();
-        console.log("stored boooking in post:",storedBooking)
         const expectedBooking = {
             flight_id: testflights[0]._id.toString(),
             passenger_id: (await User.findOne({ email: user0.email }).lean())._id.toString(),
@@ -232,7 +221,6 @@ const flight = [
         let Booking0Id, Booking1Id;
         
     beforeEach(async () => {
-        console.log("savedflightssssssss in get by id", savedflights)
         const booking1 = {
             flight_id: savedflights[0]._id,
             status: "confirmed"
@@ -241,13 +229,11 @@ const flight = [
             flight_id: savedflights[1]._id,
             status: "confirmed"
             }
-        console.log("token in get by id", token0)
             const res0 = await request(server)
             .post("/bookings")
             .set("Authorization", "Bearer " + token0)
             .send(booking1);
             Booking0Id = res0.body._id;
-            console.log("res body for posting booking for getting id", res0.body)
             const res1 = await request(server)
             .post("/bookings")
             .set("Authorization", "Bearer " + adminToken)
@@ -255,7 +241,6 @@ const flight = [
             Booking1Id = res1.body._id;
         });
         it("should send 200 to normal user with their booking ", async () => {
-            console.log("in get by id bookingiddddd", Booking0Id)
             const res = await request(server)
             .get("/bookings/" + Booking0Id)
             .set("Authorization", "Bearer " + token0)
@@ -303,7 +288,6 @@ const flight = [
         let Booking0Id, Booking1Id;
         
     beforeEach(async () => {
-        console.log("savedflightssssssss in get by id", savedflights)
         const booking1 = {
             flight_id: savedflights[0]._id,
             status: "confirmed"
@@ -312,13 +296,11 @@ const flight = [
             flight_id: savedflights[1]._id,
             status: "confirmed"
         }
-        console.log("token in get by id", token0)
             const res0 = await request(server)
             .post("/bookings")
             .set("Authorization", "Bearer " + token0)
             .send(booking1);
             Booking0Id = res0.body._id;
-            console.log("res body for posting booking for getting id", res0.body)
             const res1 = await request(server)
             .post("/bookings")
             .set("Authorization", "Bearer " + adminToken)
@@ -362,7 +344,6 @@ const flight = [
     describe("GET /ticket/:id", () => {
         let Booking0Id, Booking1Id;
         beforeEach(async () => {
-            console.log("savedflightssssssss in get by id", savedflights)
             const booking1 = {
                 flight_id: savedflights[0]._id,
                 status: "confirmed"
@@ -371,13 +352,11 @@ const flight = [
                 flight_id: savedflights[1]._id,
                 status: "confirmed"
             }
-            console.log("token in get by id", token0)
                 const res0 = await request(server)
                 .post("/bookings")
                 .set("Authorization", "Bearer " + token0)
                 .send(booking1);
                 Booking0Id = res0.body._id;
-                console.log("res body for posting booking for getting id", res0.body)
                 const res1 = await request(server)
                 .post("/bookings")
                 .set("Authorization", "Bearer " + adminToken)

@@ -68,7 +68,6 @@ router.put("/:id",isLoggedIn,isAdmin,async (req, res, next) => {
         const airlineresultsupd = await AirlineDAO.updateAirlines(aid,airlineupdrec)
         return res.status(200).json(airlineresultsupd);
     } catch(e) {
-        console.log("in route  error", e)
         next(e)
     }
 

@@ -90,7 +90,6 @@ describe("/airports", () => {
       const searchTerm = 'san francisco CA'
       const res = await request(server).get("/airports/?location=" + encodeURI(searchTerm));
       expect(res.statusCode).toEqual(200);
-      console.log("in airporttest.js", res.body)
       expect(res.body).toMatchObject([
         testAirport.find(airp => airp.name === "Mineta San Jose  International Airport"),
         testAirport.find(airp => airp.name === "San Francisco Oakland International Airport"),
@@ -192,7 +191,6 @@ describe("/airports", () => {
       .post("/airports")
       .set("Authorization", "Bearer " + adminToken)
       .send(airport);
-      console.log("airport post response", res.body)
       orgairport = res.body;
   });
  

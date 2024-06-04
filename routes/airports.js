@@ -43,7 +43,6 @@ router.get("/", async (req, res, next) => {
         
         try {
             const airportresults = await AirportDAO.getAirportByCity(req.query.location)
-            console.log("in airport routes", airportresults)
             return res.status(200).json(airportresults);
         } catch(e) {
             next(e)
@@ -53,7 +52,6 @@ router.get("/", async (req, res, next) => {
 //get by Id
 router.get("/:id", async (req, res, next) => {
     const airportid = req.params.id
-    console.log('airport in get by id', airportid)
     const airportresult = await  AirportDAO.getAirportById(airportid);
     if (airportresult) {
         res.json(airportresult);

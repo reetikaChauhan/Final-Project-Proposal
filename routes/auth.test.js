@@ -115,10 +115,8 @@ describe("/auth", () => {
       });
       it("should return a JWT with user email, _id, and roles inside, but not password", async () => {
         const res = await request(server).post("/auth/login").send(user);
-        console.log("user value send in body", user)
         const token = res.body.token;
         const decodedToken = jwt.decode(token);
-        console.log("decodedtokenin tests", decodedToken)
         expect(decodedToken.email).toEqual(user.email);
         expect(decodedToken.roles).toEqual(["user"]);
         expect(decodedToken._id).toMatch(

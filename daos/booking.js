@@ -14,7 +14,6 @@ module.exports.getBookings = async(user) => {
     let allbookings
     if(user){
          allbookings = await Booking.find({passenger_id:user }).lean(); 
-         console.log("in daos user with its booking", allbookings)
     }
     else{
          allbookings = await Booking.find({ }).lean(); 
@@ -25,9 +24,7 @@ module.exports.getBookings = async(user) => {
 module.exports.getBookingswithid = async(user,id) => {
     let allbookings
     if(user){
-        console.log("hey there i am running ")
          allbookings = await Booking.findOne({passenger_id:user,_id:id }).lean(); 
-         console.log("running get bookings by id with non -admin",allbookings )
     }
     else{
          allbookings = await Booking.findOne({ _id:id}).lean(); 
@@ -38,7 +35,6 @@ module.exports.getBookingswithid = async(user,id) => {
 
 module.exports.isavailable = async(fid) => {
     try {
-        const flight_Id = new mongoose.Types.ObjectId(fid);
         const allseatobj = await Flights.find({
             _id:fid,
             seat_map: {
@@ -48,11 +44,8 @@ module.exports.isavailable = async(fid) => {
             }
         }).lean();
 
-        
-        console.log('Bookings with available seats:', allseatobj);
         return allseatobj;
     } catch (err) {
-        console.error('Error finding bookings:', err);
         throw err
     } 
      
@@ -144,7 +137,7 @@ module.exports.getTicketofUser = async (userID, bookingId) => {
                airline:'$airline_info.name',
                departure_date: '$flight_info.departure_date',
                departure_time:'$flight_info.departure_time',
-               departure_airport:'$arrival_airport.name',
+               departure_airport:'$departure_airport.name',
                arrival_date: '$flight_info.arrival_date',
                arrival_time:'$flight_info.arrival_time',
                arrival_airport:'$arrival_airport.name',
@@ -152,91 +145,15 @@ module.exports.getTicketofUser = async (userID, bookingId) => {
         }
         
     ]);
-    console.log("result in booking ticket", result)
     return result;
     
 }
     catch (error) {
-         console.error('Error performing aggregation:', error);
         throw error
         }
 };
 
 
-// module.exports.getTicketofUser = async(user,id) => {
-//     console.log("user in ticket",user,id)
-//     try {
-//         const result = await Booking.aggregate([
-//             {
-//                 $match: {
-//                   _id: id,
-//                   passenger_id: user
-//                 }
-//               },
-//             {
-//                 $lookup: {
-//                     from: 'user',
-//                     localField: 'passenger_id',
-//                     foreignField: '_id',
-//                     as: 'passenger_info',
-//                 },
-//             },
-//             {
-//                 $lookup: {
-//                     from: 'flights',
-//                     localField: 'flight_id',
-//                     foreignField: '_id',
-//                     as: 'flight_info',
-//                 },
-//             },
-//             {
-//                 $unwind: '$passenger_info',
-//             },
-//             {
-//                 $unwind: '$flight_info',
-//             },
-//             {
-//                 $lookup: {
-//                     from: 'airports',
-//                     localField: 'flight.departure_airport_id',
-//                     foreignField: '_id',
-//                     as: 'departure_airport',
-//                 },
-
-//             },
-//             {
-//                 $lookup: {
-//                     from: 'airports',
-//                     localField: 'flight.arrival_airport_id',
-//                     foreignField: '_id',
-//                     as: 'arrival_airport',
-//                 },
-
-//             },
-//             {
-//                 $unwind: '$departure_airport',
-//             },
-//             {
-//                 $unwind: '$arrival_airport',
-//             },
-//             {
-//                 $project: {
-//                   _id: 1,
-//                   departure_airport_name:"$departure_airport.name",
-//                   status: 1
-//                 }
-//               },
-//         ]);
-
-//         console.log("in daos",result);
-//         return result;
-//     } catch (error) {
-//         console.error('Error performing aggregation:', error);
-//         throw error
-//     }
-   
-    
-// }
 
 
 

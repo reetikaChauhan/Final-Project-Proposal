@@ -6,7 +6,7 @@ const tokenDAO = require('../daos/token');
 const BookingDAO = require('../daos/booking');
 const FlightDAO = require('../daos/flights');
 const isLoggedIn = require('../middleware/logged_in')
-const isAdmin = require('../middleware/authorization')
+
 
 // create
 router.post("/",isLoggedIn, async (req, res, next) => {
@@ -17,20 +17,16 @@ router.post("/",isLoggedIn, async (req, res, next) => {
     } else {
         try {
             const availableseatsobj = await BookingDAO.isavailable(bookingobj.flight_id)
-            console.log("tatti obj ",availableseatsobj)
             if (!availableseatsobj || availableseatsobj.length === 0) {
                 return res.status(400).send('Invalid flight ID or no seats available');
             }
-            console.log("dekh chlyo matt bta rhe")
             let seatmaparray = availableseatsobj[0].seat_map
             for(let i = 0; i < seatmaparray.length;i++){
-                console.log("in seatmap", seatmaparray[i])
                 if(seatmaparray[i].booked == false){
                     booked_seat = seatmaparray[i].seat_num
                     const bookingresult = await BookingDAO.bookflight(bookingobj,req.user._id, booked_seat);
                     const updatedFlight = await FlightDAO.updateseatbooked(bookingobj.flight_id, booked_seat);
                     if(bookingresult && updatedFlight){
-                        console.log("seat booked yeaaaaaa")
                         return res.status(200).json(bookingresult);
                     }
                     
@@ -52,12 +48,10 @@ router.post("/",isLoggedIn, async (req, res, next) => {
 router.get("/",isLoggedIn, async (req, res, next) => {
     let user;
     let bookings;
-    console.log("hello there in routes", req.user)
     try {
             if (req.user.roles.includes('admin')) {
                 bookings = await BookingDAO.getBookings(user);
             } else {
-                console.log("in else")
                 bookings = await BookingDAO.getBookings(req.user._id);
             }
             res.status(200).json(bookings);
@@ -74,7 +68,6 @@ router.get("/:id",isLoggedIn, async (req, res, next) => {
         if (req.user.roles.includes('admin')) {
                 bookings = await BookingDAO.getBookingswithid(user,bookingid);
             } else {
-                console.log("hi there")
                 bookings = await BookingDAO.getBookingswithid(req.user._id,bookingid);
             }
         if(bookings)
@@ -88,23 +81,19 @@ router.get("/:id",isLoggedIn, async (req, res, next) => {
             return res.status(409).send(error.message); // 409 for duplicate key error
         } else {
             // Handle other errors
-            console.log("error encountered")
             next(error);
         }
     }
 });
 // GET e-ticket
 router.get("/ticket/:id",isLoggedIn, async (req, res, next) => {
-    console.log("user in ticket",req.params)
     const bookingid = req.params.id
-    console.log("user in ticket",req.user._id,bookingid)
     if (!mongoose.Types.ObjectId.isValid( bookingid)) {
         return res.status(400).json({ message: 'Invalid ID format' });
       }
     
     try {
             const ticketbooked = await BookingDAO.getTicketofUser(req.user._id,bookingid);  
-            console.log("i am in tocket booking route", ticketbooked)
             if (ticketbooked && ticketbooked.length === 0){
                 res.status(404).json("accesing ticket of some one else"); 
             }  
@@ -121,10 +110,11 @@ router.get("/ticket/:id",isLoggedIn, async (req, res, next) => {
             return res.status(409).send(error.message); // 409 for duplicate key error
         } else {
             // Handle other errors
-            console.log("error encountered")
             next(error);
         }
     }
 });
+
+
 
 module.exports = router;

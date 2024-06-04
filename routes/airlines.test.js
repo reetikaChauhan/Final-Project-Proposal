@@ -166,7 +166,6 @@ describe("/airlines", () => {
       .post("/airlines")
       .set("Authorization", "Bearer " + adminToken)
       .send(airline);
-      console.log("airline post response", res.body)
       orgairline = res.body;
   });
  

@@ -81,9 +81,7 @@ const flight = [
 ]
   
   beforeEach(async () => {
-    console.log("hellooooooooooo")
     savedAirport = await Airports.insertMany(testAirport);
-    console.log("savedAirport tatssssss", savedAirport)
     testAirport.forEach((airport, index) => {
         airport._id = savedAirport[index]._id.toString();
       });
@@ -92,8 +90,6 @@ const flight = [
         airline._id = savedAirline[index]._id.toString();
     });
    
-    console.log("testAirport", testAirport)
-    console.log("testAirline", testAirline)
     testflights[0].departure_airport_id = testAirport[0]._id;
     testflights[0].arrival_airport_id = testAirport[1]._id;
     testflights[1].departure_airport_id = testAirport[0]._id;
@@ -105,21 +101,15 @@ const flight = [
     testflights.forEach((flight, index) => {
         flight._id = savedflights[index]._id.toString();
         flight.seat_map.forEach((seat,index_seat) =>{
-          console.log("seattt in test flight", seat)
           seat._id = savedflights[index].seat_map[index_seat]._id.toString();
-          console.log("seattt in test flight after adding", seat)
         })
     });
-    console.log("in before each", testflights)
-    console.log("saved flightttttttt", savedflights)
   });
   afterEach(testUtils.clearDB);
 
   describe("GET /", () => {
-    console.log("testflights", testflights)
     it("should return all flights", async () => {
       const res = await request(server).get("/flights");
-      console.log("get all flightsaaaaa", res.body)
       expect(res.statusCode).toEqual(200);
       testflights.forEach(testfl => {
         expect(res.body).toContainEqual(
@@ -146,7 +136,6 @@ const flight = [
     it("should return one flight matching the search query", async () => {
       const res = await request(server).get("/flights/?arrival_city=" + encodeURI(searchterm1)+ "&departure_city=" + encodeURI(searchterm2));
       expect(res.statusCode).toEqual(200);
-      console.log("res.body in gett by cityyyyyyyarrr", res.body)
       expect(res.body).toMatchObject(testflights);
  });
   });
@@ -199,7 +188,6 @@ const flight = [
         
   describe("POST / flight %#", () => {
       it("should send 403 to normal user and not store flight", async () => {
-        console.log("flights....",flight)
         const res = await request(server)
           .post("/flights")
           .set("Authorization", "Bearer " + token0)
@@ -221,17 +209,13 @@ const flight = [
           arrival_airport_id : testAirport[1]._id,
           airline_id:testAirline[0]._id
         }
-       console.log("upflighttttttt",upflight)
         const res = await request(server)
           .post("/flights")
           .set("Authorization", "Bearer " + adminToken)
           .send(upflight);
         expect(res.statusCode).toEqual(200);
         expect(res.body).toMatchObject(upflight);
-        console.log("res.body in post plsssss", res.body)
         const savedflight = await Flights.findOne({ _id: res.body._id }).lean();
-        console.log("saved flight in posttttt", savedflight)
-        console.log("flight to mtched in post", upflight)
         expect(savedflight.departure_time).toEqual(res.body.departure_time);
       });
     });
