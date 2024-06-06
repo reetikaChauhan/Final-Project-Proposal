@@ -35,6 +35,13 @@ module.exports.createAirlinesrec = async(airlinerec) => {
     const airlineobj =  await Airlines.create(airlinerec);
     return airlineobj
 }
+module.exports.deleteById = async (aId) => {
+  if (!mongoose.Types.ObjectId.isValid(aId)) {
+    return false;
+  }
+  await Airlines.deleteOne({ _id: aId });
+  return true;
+}
 
 class BadDataError extends Error {};
 module.exports.BadDataError = BadDataError;

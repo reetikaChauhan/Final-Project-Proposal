@@ -218,7 +218,20 @@ describe("/airports", () => {
       });
   });
   });
-    
+  describe("DELETE /:id", () => {
+    it("should reject a bad id", async () => {
+      const res = await request(server).delete("/airports/fake").send();
+      expect(res.statusCode).toEqual(400);
+    });
+
+    it("should delete the expected airport", async () => {
+      const { _id } = testAirport[1];
+      const res = await request(server).delete("/airports/" + _id).send({});
+      expect(res.statusCode).toEqual(200);
+      const storedAirport = await Airports.findOne({ _id });
+      expect(storedAirport).toBeNull();
+    });
+  }); 
   })
     
 });

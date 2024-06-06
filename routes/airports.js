@@ -71,4 +71,14 @@ router.put("/:id",isLoggedIn,isAdmin, async (req, res, next) => {
     }
 });
 
+router.delete("/:id", async (req, res, next) => {
+    const aId = req.params.id;
+    try {
+      const success = await AirportDAO.deleteById(aId);
+      res.sendStatus(success ? 200 : 400);
+    } catch(e) {
+      res.status(500).send(e.message);
+    }
+  });
+
   module.exports = router;

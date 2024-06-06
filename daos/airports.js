@@ -38,5 +38,13 @@ module.exports.createAirportrec = async(airportrec) => {
     return airportobj
 }
 
+module.exports.deleteById = async (aId) => {
+  if (!mongoose.Types.ObjectId.isValid(aId)) {
+    return false;
+  }
+  await Airport.deleteOne({ _id: aId });
+  return true;
+}
+
 class BadDataError extends Error {};
 module.exports.BadDataError = BadDataError;

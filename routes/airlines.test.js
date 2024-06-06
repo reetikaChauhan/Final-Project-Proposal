@@ -193,7 +193,20 @@ describe("/airlines", () => {
       });
   });
   });
-    
+  describe("DELETE /:id", () => {
+    it("should reject a bad id", async () => {
+      const res = await request(server).delete("/airlines/fake").send();
+      expect(res.statusCode).toEqual(400);
+    });
+
+    it("should delete the expected airlines", async () => {
+      const { _id } = testAirlines[1];
+      const res = await request(server).delete("/airlines/" + _id).send({});
+      expect(res.statusCode).toEqual(200);
+      const storedAirline = await Airlines.findOne({ _id });
+      expect(storedAirline).toBeNull();
+    });
+  });  
   })
     
 });
