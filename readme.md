@@ -1,3 +1,18 @@
+- The self-evaluation of approach and results:
+The Airline Ticketing System project successfully meets the outlined requirements, demonstrating a robust approach to user authentication, data management, and efficient search capabilities. The implementation of advanced features like aggregations and text search adds significant value to the project. The comprehensive test coverage ensures the reliability of the system. The project highlights an approach, with a strong focus on learning and applying new concepts in model schema design.
+
+- Explain what worked well and what didn't:
+
+Didn't worked well: I started with the idea of making authentication as a microservice. I was able to implement it but I was not able to figure out unit testing. Later I realized I have to use mock testing to test the authentication because it is calling another API. Because of the time constraints I dropped the microservice implementation feature from my project.
+
+Worked well: The seat map architecture worked well. Designing the flight models to have seat architecture with booked and not booked seats.The assigning of seats to the user upon booking.
+
+- The challenge I faced while working on this project:
+ The ticket generation consisted of getting data from all the models and applying the aggregation to all the models was a challenge. To debugg the aggregation pipeline to know what is the result of each lookup in the pipeline.
+
+- What you would like to do differently or improve upon:
+I would like to improve the bookings model design to handle add on trips. To break the entire project into small microservices and make them communicate with each other. Also build frontend of the application.
+
 Proof of Concept
 Completed features:
 - Project setup, with mongoose connection and running express server.
@@ -7,9 +22,9 @@ Completed features:
 - Implemented text search using city name for searching airport.
 - Implemented aggregation to search flight using arrival city and departure city.
 - Implemented aggregation to get ticket of the user with booking id.
-
-Tasks Pending:
 - Routes should be fully tested (project test coverage > 80%)
+
+
 
 Project requirements covered:
 - 4 set  of CRUD operations. 2 complete with create, read and update.
@@ -38,7 +53,7 @@ A description of the scenario my project is operating in:
 -  Each flight will have a seat map initilized with False to all seat key- value pairs. Each flight would be booked based on the available seats on that flight. When booked it will change to one.
 - The seat-map logic may change while implementing. 
 - passenger: (_id, name(String), email(String),password, phone-number(String)) [When sign up get all the values]
-Bookings: (_id, passenger_id, flight_id, status, seat_confirmed)
+- Bookings: (_id, passenger_id, flight_id, status, seat_confirmed)
 
  Routes
 - Login
