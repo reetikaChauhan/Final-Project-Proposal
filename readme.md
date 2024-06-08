@@ -22,7 +22,7 @@ Completed features:
 - Implemented text search using city name for searching airport.
 - Implemented aggregation to search flight using arrival city and departure city.
 - Implemented aggregation to get ticket of the user with booking id.
-- Routes should be fully tested (project test coverage > 80%)
+- Routes fully tested (project test coverage 81.62 % > 80%)
 
 
 
@@ -39,7 +39,7 @@ A description of the scenario my project is operating in:
     Postman as frontend.
     Backend Express and Mongodb
 - It will consist of following features:
-    Authentication : ( as microservice) 
+    Authentication : 
     authorization: ( admin and user)
     Admin manages adding airports, ailines, flights.
     User books flight
